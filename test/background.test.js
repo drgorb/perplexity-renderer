@@ -11,8 +11,8 @@ describe('Chrome Extension', () => {
     beforeAll(async () => {
         console.log("starting beforeAll");
         // Create a directory with a timestamp in the root of the project
-        const timestamp = Date.now();
-        tempDir = path.resolve(__dirname, `../extension-${timestamp}`);
+        tempDir = path.resolve(__dirname, `../extension-test`);
+        console.log(`temp dir ${tempDir}`)
         fs.mkdirSync(tempDir);
 
         // Copy the necessary files and directories to the temporary directory
@@ -98,6 +98,9 @@ describe('Chrome Extension', () => {
     it('should load popup.html and execute popup.bundle.js without errors', async () => {
         const consoleMessages = [];
         page.on('console', msg => consoleMessages.push(msg.text()));
+        await page.evaluate(() => {
+            navigator.clipboard.writeText('Sample text for clipboard');
+        });
 
         console.log('Opening extension popup...');
         await page.goto(`chrome-extension://${extensionId}/popup.html`);
