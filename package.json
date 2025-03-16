@@ -1,0 +1,28 @@
+{
+  "name": "markdown-render",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run build && jest",
+    "clear": "rm -rf dist extension.zip",
+    "build": "npm run clear && webpack --mode production",
+    "package": "npm run build && zip -r extension.zip dist icons manifest.json popup.html styles.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "marked": "^15.0.7"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "adm-zip": "^0.5.16",
+    "babel-loader": "^10.0.0",
+    "jest": "^29.7.0",
+    "puppeteer": "^24.3.1",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  }
+}
