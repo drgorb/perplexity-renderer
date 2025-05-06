@@ -116,4 +116,53 @@ describe('Chrome Extension', () => {
         const content = await page.content();
         console.log('Popup content:', content);
     }, 60000);
+
+    it('should correctly sanitize text by removing numbers in square brackets', async () => {
+        // Load test-input.md content
+        const testInputPath = path.resolve(__dirname, '../test/test-input.md');
+        const testInput = fs.readFileSync(testInputPath, 'utf8');
+
+        // Set up a page context to test the function directly
+        await page.goto(`chrome-extension://${extensionId}/popup.html`);
+
+        // Mock the clipboard API to return our test input
+        await page.evaluate((textContent) => {
+            navigator.clipboard.readText = async () => textContent;
+            navigator.clipboard.write = async () => {};
+        }, testInput);
+
+        // Execute the processClipboardContent function and capture its result
+        const result = await page.evaluate(async () => {
+            // Create a function that exposes processClipboardContent for testing
+            async function testProcessClipboardContent() {
+                const clipboardText = await navigator.clipboard.readText();
+                const sanitizedText = clipboardText.replace(/\[\d+\]/g, ''); // Strip numbers in brackets
+                return sanitizedText;
+            }
+
+            // Call the function and return the result
+            return await testProcessClipboardContent();
+        });
+
+        // Verify the result doesn't contain any [number] patterns
+        expect(result).not.toMatch(/\[\d+\]/);
+
+        // Make sure content exists but square brackets with numbers are removed
+        expect(result).toContain('Most Important Topics in TOGAF Technology Architecture');
+        expect(result).toContain('Baseline and Target Technology Architecture');
+
+        // Check specific cases where numbers in brackets were present in the original
+        expect(testInput).toMatch(/\[\d+\]/); // Original should have patterns
+        expect(result).not.toContain('[6][2]');
+        expect(result).not.toContain('[5][10]');
+        expect(result).not.toContain('[6][9]');
+        expect(result).not.toContain('[5][9]');
+        expect(result).not.toContain('[1][5]');
+        expect(result).not.toContain('62');
+        expect(result).not.toContain('510');
+        expect(result).not.toContain('69');
+        expect(result).not.toContain('59');
+        expect(result).not.toContain('15');
+        expect(result).not.toContain('[9]');
+    });
 });

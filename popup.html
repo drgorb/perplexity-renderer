@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            width: 640px;
-            height: 480px;
             overflow: auto;
         }
 
@@ -20,8 +18,12 @@
     </style>
 </head>
 <body>
-<!--<button id="renderBtn" class="btn btn-primary mt-3">Render and Copy</button>-->
-<div id="output"></div>
-<script src="dist/popup.bundle.js"></script>
+
+<div class="d-flex justify-content-between p-3" style="gap: 20px; white-space: nowrap;">
+    <button id="renderBtn" class="btn btn-primary mt-3">Copy HTML</button>
+    <button id="copyMarkdownBtn" class="btn btn-primary mt-3">Copy Markdown</button>
+</div>
+
+<div id="output"></div><script src="dist/popup.bundle.js"></script>
 </body>
 </html>

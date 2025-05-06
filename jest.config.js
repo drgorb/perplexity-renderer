@@ -1,5 +1,4 @@
 module.exports = {
     verbose: true,
-    testEnvironment: 'node',
-    setupFilesAfterEnv: ['./jest.setup.js']
+    setupFilesAfterEnv: ['@testing-library/jest-dom', './jest.setup.js'],
 };
